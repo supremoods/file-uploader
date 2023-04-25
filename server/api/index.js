@@ -1,6 +1,10 @@
 const express = require('express');
 const app = express();
 const multer = require('multer');
+const fs = require('fs');
+const cors = require('cors');
+
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -23,7 +27,6 @@ app.get('/getFiles', (req, res) => {
 
    // get all files from the uploads folder
    const testFolder = './tmp/uploads/';
-   const fs = require('fs');
 
    fs.readdir(testFolder, (err, files) => {
       
@@ -41,7 +44,6 @@ app.get('/getFiles', (req, res) => {
 app.post('/upload', upload.single('file'), (req, res) => {
    // split the file in chunks of 1MB
    console.log(req.file);
-    
    // send the response
    res.status(200).json({
        message: 'File uploaded successfully',
@@ -53,5 +55,6 @@ app.post('/upload', upload.single('file'), (req, res) => {
    });
  });
  
+
 
 module.exports = app

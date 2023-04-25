@@ -1,0 +1,133 @@
+
+         // ----------------------------------------------------------
+         // const file = this.file
+         // const chunkSize = 1024 * 1024 * 5 // 5MB
+
+         // let offset = 0
+
+          
+
+         // const readChunk = (chunkOffset) => {
+         //    const reader = new FileReader();
+         //    const chunk = file.slice(chunkOffset, chunkOffset + chunkSize);
+         //    reader.readAsArrayBuffer(chunk);
+         //    reader.onload = () => {
+         //       const buffer = reader.result;
+         //       console.log(buffer)
+
+         //       // parse buffer to blob
+         //       const blob = new Blob([buffer], { type: 'application/octet-stream' });
+
+         //       console.log(blob)
+
+         //       axios.post('/api/upload',  blob,{
+         //          headers: {
+         //             'Content-Type': 'application/octet-stream'
+         //          },
+         //          onUploadProgress: progressEvent => {
+         //             this.progress = parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total))
+         //          }
+         //       })
+         //       .then((response) => {
+         //          console.log(response.data)
+         //          offset += buffer.byteLength
+         //          console.log(offset)
+         //          if (offset < file.size) {
+         //             readChunk(offset);
+         //          } else {
+         //             console.log('Finished reading file');
+         //          }
+         //       })
+         //       .catch((error) => {
+         //          console.log(error);
+         //       })
+         //    }
+         // }
+         // readChunk(0);
+
+
+
+         const readChunk = (chunkOffset) => {
+            const reader = new FileReader();
+            const chunk = file.slice(chunkOffset, chunkOffset + chunkSize);
+            reader.readAsArrayBuffer(chunk);
+            reader.onload = () => {
+               const buffer = reader.result;
+               console.log(buffer)
+
+               // parse buffer to blob
+               const blob = new Blob([buffer], { type: 'application/octet-stream' });
+
+               console.log(blob)
+
+               axios.post('/api/upload',  blob,{
+                  headers: {
+                     'Content-Type': 'application/octet-stream'
+                  },
+                  onUploadProgress: progressEvent => {
+                     this.progress = parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total))
+                  }
+               })
+               .then((response) => {
+                  console.log(response.data)
+                  offset += buffer.byteLength
+                  console.log(offset)
+                  if (offset < file.size) {
+                     readChunk(offset);
+                  } else {
+                     console.log('Finished reading file');
+                  }
+               })
+               .catch((error) => {
+                  console.log(error);
+               })
+            }
+         }
+         readChunk(0);
+ 
+
+         // ----------------------------------------------------------
+         
+         
+         // const chunkSize = 1024 * 1024;
+
+         // const fileSize = this.file.size;
+         // const chunks = Math.floor(fileSize / chunkSize) + 1;
+
+         // let offset = 0;
+
+         // for(let i = 0; i < chunks; i++) {
+         //    const chunk = this.file.slice(offset, offset + chunkSize);
+         //    const formData = new FormData();
+         //    formData.append('file', chunk);
+         //    formData.append('chunkNumber', i+1);
+         //    formData.append('totalChunks', chunks);
+
+         //    axios.post('/api/upload', formData).then((response) => {
+         //       console.log(response.data)
+         //       offset += chunkSize;
+         //       this.progress = parseInt(Math.round((offset * 100) / fileSize))
+         //    }) 
+         // }
+         
+
+
+
+         
+// const express = require('express');
+// const bodyParser = require('body-parser');
+// const fs = require('fs');
+
+// const app = express();
+
+// app.use(bodyParser.json());
+
+// app.post('/upload', (req, res) => {
+  
+//   console.log(req);
+//   // const chunk = Buffer.from(req.body.chunk);
+//   // fs.appendFileSync(`./tmp/uploads/${req.body.filename}`, chunk);
+//   // res.send('ok');
+
+//   res.send(req.body.chunk);
+// });
